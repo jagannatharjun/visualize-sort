@@ -1,54 +1,22 @@
 #ifndef SORTVISUALIZE_HPP
 #define SORTVISUALIZE_HPP
 
-#include <QWidget>
+#include <QGraphicsScene>
 
-#include <vector>
+template<typename T> class element;
 
-class Bar;
-
-class Sortable {
-    int weight;
-    Bar *bar;
-
+class SortVisual : public QGraphicsScene
+{
 public:
-    Sortable(QWidget *parent, QRect rect, QColor color);
-    Sortable(Sortable &&t);
-    Sortable &operator=(Sortable &&t);
+    SortVisual(int count, int height, int maxwidth);
+    ~SortVisual();
 
-    Sortable() = delete;
-    Sortable(Sortable &) = delete;
-    Sortable &operator=(const Sortable &) = delete;
-    int getWeight() const;
-
-
-    operator int() const { return getWeight(); }
-};
-
-class SortVisualize : public QWidget {
-    Q_OBJECT
-public:
-    explicit SortVisualize(int barCount, int barHeight,
-                           QWidget *parent = nullptr);
-    virtual ~SortVisualize() {}
-
-    QSize minimumSizeHint() const override {
-        return QSize(width(), m_bars.size() * 10);
-    }
-
-    void start();
-
-    int barHeight() const;
-
-
-signals:
-
-public slots:
+    void start(void sorter(element<int> *b, element<int> *e));
 
 private:
-    std::vector<Sortable> m_bars;
-   // std::vector<Bar *> m_bars;
-    int m_barHeight;
+    struct pdata;
+    pdata * m_data;
 };
+
 
 #endif // SORTVISUALIZE_HPP
