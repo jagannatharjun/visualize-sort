@@ -2,21 +2,19 @@
 #define SORTVISUALIZE_HPP
 
 #include <QGraphicsScene>
+#include <functional>
 
-template<typename T> class element;
-
-class SortVisual : public QGraphicsScene
-{
+class SortVisual : public QGraphicsScene {
 public:
     SortVisual(int count, int height, int maxwidth);
     ~SortVisual();
 
-    void start(void sorter(element<int> *b, element<int> *e));
+    void start(void sorter(int *b, int *e,
+                           const std::function<bool(int a, int b)> &cmp));
 
 private:
     struct pdata;
-    pdata * m_data;
+    pdata *m_data;
 };
-
 
 #endif // SORTVISUALIZE_HPP
