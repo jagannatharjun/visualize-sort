@@ -29,7 +29,6 @@ SOURCES += \
         sortvisualize.cpp
 
 HEADERS += \
-    element.h \
     sortvisualize.hpp
 
 FORMS +=

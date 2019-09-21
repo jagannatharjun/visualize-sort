@@ -1,8 +1,8 @@
 #include <QApplication>
 #include <QDebug>
 #include <QGraphicsView>
+#include <QTimer>
 
-#include "element.h"
 #include "sortvisualize.hpp"
 
 void insertion_sort(int *a, int *b,
@@ -13,27 +13,20 @@ void insertion_sort(int *a, int *b,
         }
     }
 }
-
-#include <QTimer>
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
-    SortVisual sv(200, 2, 800);
+    QWidget w;
 
-    QGraphicsView v;
+    SortVisual sv(400, 2, 800);
+
+    QGraphicsView v(&w);
     v.setScene(&sv);
     v.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     v.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    w.show();
 
-    v.show();
+    sv.start(std::sort);
 
-    QTimer timer;
-    QObject::connect(&timer, &QTimer::timeout, [&] () {
-        sv.start(insertion_sort);
-        timer.stop();
-    });
-    timer.setInterval(1000);
-    timer.start();
-    auto t = a.exec();
-    return t;
+    return a.exec();
 }
