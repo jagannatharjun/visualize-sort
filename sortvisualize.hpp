@@ -14,6 +14,7 @@ public:
                            const std::function<bool(int a, int b)> &cmp));
 
     std::chrono::microseconds sortTime() const;
+    void setUpdateTime(int msec);
 
 private:
     struct pdata;

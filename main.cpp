@@ -1,13 +1,13 @@
 #include <QApplication>
 #include <QDebug>
 #include <QGraphicsView>
-#include <QGridLayout>
-#include <QTimer>
-
-#include "flowlayout.h"
-#include "sortvisualize.hpp"
+#include <QHBoxLayout>
+#include <QLabel>
 #include <QThread>
-#include <thread>
+#include <QTimer>
+#include <QVBoxLayout>
+
+#include "sortvisualize.hpp"
 
 void insertion_sort(int *a, int *b,
                     const std::function<bool(int a, int b)> &cmp) {
@@ -30,8 +30,6 @@ void selection_sort(int *a, int *b,
     }
 }
 
-#include <QLabel>
-#include <QVBoxLayout>
 struct SortWidget {
     QWidget container;
     QLabel labl;
@@ -56,37 +54,44 @@ struct SortWidget {
     void start(void sort(int *a, int *b,
                          const std::function<bool(int a, int b)> &cmp)) {
         thread = QThread::create([=]() {
-            scene.start(sort);/*
-            labl.setText(
-                labl.text() + " " +
-                QString::number(
-                    std::chrono::duration_cast<std::chrono::milliseconds>(
-                        scene.sortTime())
-                        .count()));*/
+            scene.start(sort);
+            //             labl.setText(
+            //                 labl.text() + " " +
+            //                 QString::number(
+            //                     std::chrono::duration_cast<std::chrono::milliseconds>(
+            //                         scene.sortTime())
+            //                         .count()));
         });
         thread->start();
     }
+
+    ~SortWidget() { delete thread; }
 };
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
     QWidget w;
-    FlowLayout l;
+    QVBoxLayout l;
     w.setLayout(&l);
     l.setAlignment(Qt::AlignLeft);
 
-    SortWidget stdsort("std::sort", 200, 1, 400, 0, l),
-        stdstablesort("std::stable_sort", 200, 1, 400, 0, l),
-        insertionSort("insertion_sort", 200, 1, 400, 0, l),
-        selectionSort("selection_sort", 200, 1, 400, 0, l);
+    QHBoxLayout v1, v2;
+    l.addLayout(&v1);
+    l.addLayout(&v2);
 
-    w.resize(l.sizeHint() * 2);
+    SortWidget stdsort("std::sort", 200, 1, 400, 0, v1),
+        stdstablesort("std::stable_sort", 200, 1, 400, 0, v1),
+        insertionSort("insertion_sort", 200, 1, 400, 0, v2),
+        selectionSort("selection_sort", 200, 1, 400, 0, v2);
+
     w.show();
 
     stdsort.start(std::sort);
     stdstablesort.start(std::stable_sort);
     insertionSort.start(insertion_sort);
+
+    selectionSort.scene.setUpdateTime(64);
     selectionSort.start(selection_sort);
 
     return a.exec();

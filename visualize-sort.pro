@@ -26,12 +26,10 @@ CONFIG += c++17
 
 SOURCES += \
         main.cpp \
-        sortvisualize.cpp \
-        flowlayout.cpp
+        sortvisualize.cpp
 
 HEADERS += \
-    sortvisualize.hpp \
-    flowlayout.h
+    sortvisualize.hpp
 
 FORMS +=
 

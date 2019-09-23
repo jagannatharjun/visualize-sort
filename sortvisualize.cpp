@@ -68,18 +68,17 @@ void SortVisual::start(
     auto i = calcMap(m_data->m_array);
 #endif
 
-    auto now = std::chrono::high_resolution_clock::now();
-
+    auto now = std::chrono::system_clock::now();
     sorter(m_data->m_array.data(),
            m_data->m_array.data() + m_data->m_array.size(),
            [this](int a, int b) {
-//               if (m_data->ArraySnapShots.empty() ||
-//                   m_data->ArraySnapShots.back() != m_data->m_array)
+               if (m_data->ArraySnapShots.empty() ||
+                   m_data->ArraySnapShots.back() != m_data->m_array)
                    m_data->ArraySnapShots.push(m_data->m_array);
                return a < b;
            });
 
-    auto t = (std::chrono::high_resolution_clock::now() - now);
+    auto t = (std::chrono::system_clock::now() - now);
     m_data->sortTime = std::chrono::duration_cast<std::chrono::microseconds>(t);
     m_data->ArraySnapShots.push(m_data->m_array);
 
@@ -90,3 +89,7 @@ void SortVisual::start(
 }
 
 std::chrono::microseconds SortVisual::sortTime() const {}
+
+void SortVisual::setUpdateTime(int msec) {
+    m_data->updateTimer.setInterval(msec);
+}
